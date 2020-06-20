@@ -1,39 +1,6 @@
 #!/bin/bash
 
-# Determine the directory containing this script
-if [[ -n $BASH_VERSION ]]; then
-    _SCRIPT_LOCATION=${BASH_SOURCE[0]}
-    _SHELL="bash"
-elif [[ -n $ZSH_VERSION ]]; then
-    _SCRIPT_LOCATION=${funcstack[1]}
-    _SHELL="zsh"
-else
-    echo "Only bash and zsh are supported"
-    return 1
-fi
-_CONDA_DIR=$(dirname "$_SCRIPT_LOCATION")
 
-if [ $# -gt 1 ]; then
-    (>&2 echo "Error: did not expect more than one argument.")
-    (>&2 echo "    (Got $@)")
-    return 1
-fi
-
-case "$(uname -s)" in
-    CYGWIN*|MINGW*|MSYS*)
-        EXT=".exe"
-        export MSYS2_ENV_CONV_EXCL=CONDA_PATH
-        # ignore any windows backup paths from bat-based activation
-        if [ "${CONDA_PATH_BACKUP:0:1}" != "/"  ]; then
-           unset CONDA_PATH_BACKUP
-        fi
-        export _CONDA_PYTHON="$_CONDA_DIR/../python"
-        ;;
-    *)
-        EXT=""
-        export _CONDA_PYTHON="$_CONDA_DIR/python"
-        ;;
-esac
 
 # Ensure that this script is sourced, not executed
 # Also note that errors are ignored as `activate foo` doesn't generate a bad
@@ -46,16 +13,9 @@ instead of 'activate envname'.
     exit 1
 fi
 
-if [ "$#" -eq "0" ]; then
-    args=('root')
-else
-    args=$@
-fi
 
-"$_CONDA_DIR/conda" ..checkenv $_SHELL$EXT "$args"
-if (( $? != 0 )); then
-    return 1
-fi
+
+
 
 # Ensure we deactivate any scripts from the old env
 _CONDA_HOLD=true
@@ -115,11 +75,4 @@ fi
 
 unset CONDA_PATH
 
-if [[ -n $BASH_VERSION ]]; then
-    hash -r
-elif [[ -n $ZSH_VERSION ]]; then
-    rehash
-else
-    echo "Only bash and zsh are supported"
-    return 1
-fi
+

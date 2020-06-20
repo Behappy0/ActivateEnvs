@@ -1,11 +1,26 @@
 #!/bin/bash
-if [ $# -ne 1 ]; then
-    echo >&2 "Error: expect one argument. Got $#: $@"
+
+# parameters check
+# TODO: check sh is sourced
+if [ $# -lt 1 ]; then
+    echo >&2 "ValueError: Empty input. Please input an environment name to activate."
+    return 1
+elif [ $# -gt 1 ]; then
+    echo >&2 "ValueError: Expect one argument. Got $#: $@"
     return 1
 fi
-if [ ! -d "/Users/zyq/Envs/"$1 ]; then
-    echo >&2 "Environment Not Found Error: no environment called $1."
+# TODO: check if an env is already activated
+if [ ! -d "~/Envs/"$1 ]; then
+    echo >&2 "Environment Not Found Error: No environment called $1."
     return 1
 fi
-source "/Users/zyq/Envs/"$1"/bin/activate"
+
+# activate virtual environment
+if [ $? -eq 0 ]; then
+    source "~/Envs/"$1"/bin/activate"
+else
+    echo >&2 "RuntimeError: Environment is not been activated."
+    return 1
+fi
+
 return 0

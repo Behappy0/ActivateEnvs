@@ -1,3 +1,6 @@
 #!/bin/bash
+
+# deactivate virtual environment
 deactivate
+
 return 0
