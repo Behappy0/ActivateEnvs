@@ -1,0 +1,11 @@
+#!/bin/bash
+if [ $# -ne 1 ]; then
+    echo >&2 "Error: expect one argument. Got $#: $@"
+    return 1
+fi
+if [ ! -d "/Users/zyq/Envs/"$1 ]; then
+    echo >&2 "Environment Not Found Error: no environment called $1."
+    return 1
+fi
+source "/Users/zyq/Envs/"$1"/bin/activate"
+return 0
