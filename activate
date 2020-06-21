@@ -1,26 +1,34 @@
 #!/bin/bash
 
-# parameters check
-# TODO: check sh is sourced
-if [ $# -lt 1 ]; then
-    echo >&2 "ValueError: Empty input. Please input an environment name to activate."
-    return 1
-elif [ $# -gt 1 ]; then
-    echo >&2 "ValueError: Expect one argument. Got $#: $@"
-    return 1
-fi
-# TODO: check if an env is already activated
-if [ ! -d "~/Envs/"$1 ]; then
-    echo >&2 "Environment Not Found Error: No environment called $1."
+
+# Ensure that this script is sourced, not executed.
+if [[ "$(basename "$0" 2> /dev/null)" == "activate" ]]; then
+    echo >&2 "Error: activate must be sourced. Run 'source activate envname' instead of 'activate envname'."
     return 1
 fi
 
-# activate virtual environment
-if [ $? -eq 0 ]; then
-    source "~/Envs/"$1"/bin/activate"
-else
-    echo >&2 "RuntimeError: Environment is not been activated."
+# Parameters Check
+if [ $# -lt 1 ] || [[ $# -eq 1 && -z "$1" ]]; then
+    echo >&2 "ValueError: empty input. Please input an environment name to activate."
     return 1
+fi
+if [ $# -gt 1 ]; then
+    echo >&2 "ValueError: expect one argument. Got $#: $@"
+    return 1
+fi
+
+# TODO: check if an env is already activated
+if [ ! -d "~/Envs/${1}" ]; then
+    echo >&2 "Environment Not Found Error: no environment called $1."
+    return 1
+fi
+
+# Activate Virtual Environment
+if [ $? -ne 0 ]; then
+    echo >&2 "RuntimeError: environment is not been activated."
+    return 1
+else
+    source "~/Envs/${1}/bin/activate"
 fi
 
 return 0
