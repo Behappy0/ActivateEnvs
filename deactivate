@@ -1,6 +1,9 @@
 #!/bin/bash
 
+
 # deactivate virtual environment
-deactivate
+if [ -n "${VIRTUAL_ENV}" ]; then
+    deactivate
+fi
 
 return 0

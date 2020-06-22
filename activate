@@ -16,11 +16,14 @@ if [ $# -gt 1 ]; then
     echo >&2 "ValueError: expect one argument. Got $#: $@"
     return 1
 fi
-
-# TODO: check if an env is already activated
 if [ ! -d "~/Envs/${1}" ]; then
     echo >&2 "Environment Not Found Error: no environment called $1."
     return 1
+fi
+
+# Ensure any other virtual environment is been deactivated.
+if [ -n "${VIRTUAL_ENV}" ]; then
+    source deactivate
 fi
 
 # Activate Virtual Environment

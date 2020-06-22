@@ -1,9 +1,0 @@
-#!/bin/bash
-
-
-
-
-# Ensure we deactivate any scripts from the old env
-_CONDA_HOLD=true
-source "$_CONDA_DIR/deactivate"
-unset _CONDA_HOLD
