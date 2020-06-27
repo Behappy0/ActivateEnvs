@@ -1,8 +1,22 @@
 #!/bin/bash
 
 
-# deactivate virtual environment
-if [ -n "${VIRTUAL_ENV}" ]; then
+# Ensure that this script is sourced, not executed.
+if [[ "$(basename "$0" 2> /dev/null)" == "deactivate" ]]; then
+    echo >&2 "SyntaxError: deactivate must be sourced. Run 'source deactivate' instead of 'deactivate'."
+    return 1
+fi
+
+# Check that if there is no activated virtual environment.
+if [ -z "${VIRTUAL_ENV}" ]; then
+    return 0
+fi
+
+# Deactivate the current virtual environment.
+if [ $? -ne 0 ]; then
+    echo >&2 "RuntimeError: deactivating failed."
+    return 1
+else
     deactivate
 fi
 
