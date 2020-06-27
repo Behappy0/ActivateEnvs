@@ -4,7 +4,7 @@
 # Ensure that this script is sourced, not executed.
 if [[ "$(basename "$0" 2> /dev/null)" == "deactivate" ]]; then
     echo >&2 "SyntaxError: deactivate must be sourced. Run 'source deactivate' instead of 'deactivate'."
-    return 1
+    exit 1
 fi
 
 # Check that if there is no activated virtual environment.
