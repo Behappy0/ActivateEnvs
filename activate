@@ -1,9 +1,6 @@
 #!/bin/bash
 
 
-# Set Path to Virtual Environment
-env_path="~/Envs"
-
 # Ensure that this script is sourced, not executed.
 if [[ "$(basename "$0" 2> /dev/null)" == "activate" ]]; then
     echo >&2 "SyntaxError: activate must be sourced. Run 'source activate envname' instead of 'activate envname'."
@@ -11,7 +8,7 @@ if [[ "$(basename "$0" 2> /dev/null)" == "activate" ]]; then
 fi
 
 # Parameters Check
-if [ $# -lt 1 ] || [[ $# -eq 1 && -z "$1" ]]; then
+if [ $# -lt 1 ] || [[ $# -eq 1 && -z "$(echo "$1" | sed "s/[[:space:]]//g")" ]]; then
     echo >&2 "ValueError: empty input. Please input an environment name to activate."
     return 1
 fi
@@ -19,13 +16,13 @@ if [ $# -gt 1 ]; then
     echo >&2 "ValueError: expect one argument. Got $#: $@"
     return 1
 fi
-if [ ! -d "${env_path}/${1}" ]; then
+if [ ! -d "$HOME/$1" ]; then
     echo >&2 "Environment Not Found Error: no environment called $1."
     return 1
 fi
 
 # Ensure any other virtual environment is been deactivated.
-if [ -n "${VIRTUAL_ENV}" ]; then
+if [ -n "$VIRTUAL_ENV" ]; then
     source deactivate
 fi
 
@@ -34,7 +31,7 @@ if [ $? -ne 0 ]; then
     echo >&2 "RuntimeError: activating failed."
     return 1
 else
-    source "${env_path}/${1}/bin/activate"
+    source "$HOME/$1/bin/activate"
 fi
 
 return 0
