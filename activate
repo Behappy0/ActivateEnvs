@@ -16,7 +16,7 @@ if [ $# -gt 1 ]; then
     echo >&2 "ValueError: expect one argument. Got $#: $@"
     return 1
 fi
-if [ ! -d "$HOME/$1" ]; then
+if [ ! -d "$HOME/Envs/$1" ]; then
     echo >&2 "Environment Not Found Error: no environment called $1."
     return 1
 fi
@@ -31,7 +31,7 @@ if [ $? -ne 0 ]; then
     echo >&2 "RuntimeError: activating failed."
     return 1
 else
-    source "$HOME/$1/bin/activate"
+    source "$HOME/Envs/$1/bin/activate"
 fi
 
 return 0
